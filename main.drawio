@@ -1,5 +1,5 @@
-<mxfile host="app.diagrams.net">
-  <diagram name="Page-1" id="EKPjzMrlg9t_fplT7NgG">
+<mxfile host="app.diagrams.net" pages="2">
+  <diagram name="Main" id="EKPjzMrlg9t_fplT7NgG">
     <mxGraphModel dx="786" dy="650" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -85,7 +85,7 @@
             <mxPoint x="260.14" y="500" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <UserObject label="&lt;div&gt;API - links&lt;/div&gt;" id="ltcrQOdWJTjJK4vgKZ7d-12">
+        <UserObject label="&lt;div&gt;API - links&lt;/div&gt;" link="data:page/id,MlJRrjEMxOuFmSczEiKU" id="ltcrQOdWJTjJK4vgKZ7d-12">
           <mxCell parent="1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1">
             <mxGeometry height="60" width="120" x="199.99999999999994" y="470.00000000000006" as="geometry" />
           </mxCell>
@@ -93,6 +93,19 @@
         <mxCell id="ltcrQOdWJTjJK4vgKZ7d-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
           <mxGeometry height="60" width="120" x="200.23000000000005" y="579.5799999999999" as="geometry" />
         </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="MlJRrjEMxOuFmSczEiKU" name="API-Links">
+    <mxGraphModel dx="1375" dy="1138" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <UserObject label="&lt;div&gt;&lt;font style=&quot;font-size: 21px;&quot;&gt;&lt;b&gt;Main&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" link="data:page/id,EKPjzMrlg9t_fplT7NgG" id="f8FZWmcgoRZcNnWsK5Rg-2">
+          <mxCell parent="1" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;notch=15;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#660000);strokeColor=#2D7600;" vertex="1">
+            <mxGeometry height="70" width="100" x="760" y="70" as="geometry" />
+          </mxCell>
+        </UserObject>
       </root>
     </mxGraphModel>
   </diagram>
