@@ -85,9 +85,11 @@
             <mxPoint x="260.14" y="500" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="ltcrQOdWJTjJK4vgKZ7d-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;API - links&lt;/div&gt;" vertex="1">
-          <mxGeometry height="60" width="120" x="199.99999999999994" y="470.00000000000006" as="geometry" />
-        </mxCell>
+        <UserObject label="&lt;div&gt;API - links&lt;/div&gt;" id="ltcrQOdWJTjJK4vgKZ7d-12">
+          <mxCell parent="1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1">
+            <mxGeometry height="60" width="120" x="199.99999999999994" y="470.00000000000006" as="geometry" />
+          </mxCell>
+        </UserObject>
         <mxCell id="ltcrQOdWJTjJK4vgKZ7d-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
           <mxGeometry height="60" width="120" x="200.23000000000005" y="579.5799999999999" as="geometry" />
         </mxCell>
