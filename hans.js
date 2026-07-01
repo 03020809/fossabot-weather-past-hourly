@@ -2,6 +2,8 @@ const express = require("express");
 const fetch = require("node-fetch");
 const app = express();
 
+const toF = c => Math.round(c * 9 / 5 + 32);
+
 app.get("/wetter", async (req, res) => {
   const querystring = req.query.querystring;
 
@@ -50,13 +52,10 @@ app.get("/wetter", async (req, res) => {
 
   // --- build API params ---
   const currentParams = "current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,wind_direction_10m,precipitation,rain,weather_code,cloud_cover";
-
   const dailyParams   = "daily=weather_code,uv_index_max,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,daylight_duration,sunshine_duration,wind_speed_10m_max,wind_direction_10m_dominant,precipitation_probability_max";
-
   const hourlyParams  = "hourly=relative_humidity_2m,apparent_temperature,precipitation_probability,rain,weather_code,visibility,cloud_cover,wind_speed_10m,soil_temperature_0cm,uv_index,is_day,sunshine_duration,precipitation,temperature_2m";
 
   const dataParams = unit === "d" ? dailyParams : hourlyParams;
-
   const apiDays    = unit === "h" ? 2 : n;
   const timeParam  = past ? `past_days=${apiDays}` : `forecast_days=${apiDays}`;
 
@@ -66,27 +65,75 @@ app.get("/wetter", async (req, res) => {
   const weatherRes  = await fetch(weatherUrl);
   const weatherData = await weatherRes.json();
 
-  // --- build output (placeholder, edit later) ---
-  const current = weatherData.current;
-  let reply = `${name} now: ${current.temperature_2m}°C feels ${current.apparent_temperature}°C | wind ${current.wind_speed_10m}km/h | humidity ${current.relative_humidity_2m}%`;
+  // --- current output (always) ---
+  const c = weatherData.current;
+  const currentLine = [
+    `${name} now:`,
+    `${c.temperature_2m}°C / ${toF(c.temperature_2m)}°F`,
+    `feels ${c.apparent_temperature}°C / ${toF(c.apparent_temperature)}°F`,
+    `humidity ${c.relative_humidity_2m}%`,
+    `wind ${c.wind_speed_10m}km/h dir ${c.wind_direction_10m}°`,
+    `precip ${c.precipitation}mm`,
+    `rain ${c.rain}mm`,
+    `cloud ${c.cloud_cover}%`,
+    `weather code ${c.weather_code}`,
+    c.is_day ? "day" : "night"
+  ].join(" | ");
+
+  // --- hourly output ---
+  let dataLine = "";
 
   if (unit === "h") {
-    const times  = weatherData.hourly.time.slice(-m);
-    const temps  = weatherData.hourly.temperature_2m.slice(-m);
-    const rain   = weatherData.hourly.rain.slice(-m);
-    const wind   = weatherData.hourly.wind_speed_10m.slice(-m);
-    const rows   = times.map((t, i) => `${t.slice(11, 16)} ${temps[i]}°C rain:${rain[i]}mm wind:${wind[i]}km/h`);
-    reply       += " | " + rows.join(" | ");
+    const h       = weatherData.hourly;
+    const times   = h.time.slice(-m);
+    const rows    = times.map((t, i) => {
+      const idx = h.time.length - m + i;
+      return [
+        t.slice(11, 16),
+        `${h.temperature_2m[idx]}°C / ${toF(h.temperature_2m[idx])}°F`,
+        `feels ${h.apparent_temperature[idx]}°C / ${toF(h.apparent_temperature[idx])}°F`,
+        `humidity ${h.relative_humidity_2m[idx]}%`,
+        `precip prob ${h.precipitation_probability[idx]}%`,
+        `precip ${h.precipitation[idx]}mm`,
+        `rain ${h.rain[idx]}mm`,
+        `weather code ${h.weather_code[idx]}`,
+        `visibility ${h.visibility[idx]}m`,
+        `cloud ${h.cloud_cover[idx]}%`,
+        `wind ${h.wind_speed_10m[idx]}km/h`,
+        `soil temp ${h.soil_temperature_0cm[idx]}°C / ${toF(h.soil_temperature_0cm[idx])}°F`,
+        `uv ${h.uv_index[idx]}`,
+        `sunshine ${h.sunshine_duration[idx]}s`,
+        h.is_day[idx] ? "day" : "night"
+      ].join(" ");
+    });
+    dataLine = rows.join(" || ");
+
+  // --- daily output ---
   } else {
-    const dates  = weatherData.daily.time.slice(0, n);
-    const maxT   = weatherData.daily.temperature_2m_max.slice(0, n);
-    const minT   = weatherData.daily.temperature_2m_min.slice(0, n);
-    const precip = weatherData.daily.precipitation_probability_max.slice(0, n);
-    const rows   = dates.map((d, i) => `${d} max:${maxT[i]}°C min:${minT[i]}°C precip:${precip[i]}%`);
-    reply       += " | " + rows.join(" | ");
+    const d    = weatherData.daily;
+    const days = unit === "d" && past ? d.time.slice(-n) : d.time.slice(0, n);
+    const rows = days.map((date, i) => {
+      const idx = past ? d.time.length - n + i : i;
+      return [
+        date,
+        `weather code ${d.weather_code[idx]}`,
+        `uv max ${d.uv_index_max[idx]}`,
+        `max ${d.temperature_2m_max[idx]}°C / ${toF(d.temperature_2m_max[idx])}°F`,
+        `min ${d.temperature_2m_min[idx]}°C / ${toF(d.temperature_2m_min[idx])}°F`,
+        `feels max ${d.apparent_temperature_max[idx]}°C / ${toF(d.apparent_temperature_max[idx])}°F`,
+        `feels min ${d.apparent_temperature_min[idx]}°C / ${toF(d.apparent_temperature_min[idx])}°F`,
+        `sunrise ${d.sunrise[idx]}`,
+        `sunset ${d.sunset[idx]}`,
+        `daylight ${d.daylight_duration[idx]}s`,
+        `sunshine ${d.sunshine_duration[idx]}s`,
+        `wind max ${d.wind_speed_10m_max[idx]}km/h dir ${d.wind_direction_10m_dominant[idx]}°`,
+        `precip prob ${d.precipitation_probability_max[idx]}%`
+      ].join(" | ");
+    });
+    dataLine = rows.join(" || ");
   }
 
-  res.send(reply);
+  res.send(`${currentLine} ||| ${dataLine}`);
 });
 
 app.listen(process.env.PORT || 3000);
