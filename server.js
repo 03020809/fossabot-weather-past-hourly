@@ -58,6 +58,7 @@ app.get("/wetter", async (req, res) => {
 
   const timeParam  = past ? `past_days=${apiDays}` : `forecast_days=${apiDays}`;
   const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&${timeParam}`;
+  // https://api.open-meteo.com/v1/forecast?latitude=$(latitude)&longitude=$(longitude)&daily=weather_code,uv_index_max,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,daylight_duration,sunshine_duration,wind_speed_10m_max,wind_direction_10m_dominant,precipitation_probability_max&hourly=relative_humidity_2m,apparent_temperature,precipitation_probability,rain,weather_code,visibility,cloud_cover,wind_speed_10m,soil_temperature_0cm,uv_index,is_day,sunshine_duration,precipitation,temperature_2m&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,wind_direction_10m,precipitation,rain,weather_code,cloud_cover&${timeParam}
 
   // --- fetch weather ---
   const weatherRes  = await fetch(weatherUrl);
